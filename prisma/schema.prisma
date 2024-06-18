@@ -1,0 +1,44 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("POSTGRES_PRISMA_URL")
+}
+
+model User {
+    id       String    @id @default(cuid())
+    name     String
+    email    String
+    phone    String
+    password String
+    Role     String
+    Reserved Reserved?
+}
+
+model Store {
+    id        String    @id @default(cuid())
+    name      String
+    location  String
+    openTime  String
+    closeTime String
+    duration  Int
+    service   String[]
+    Reserved  Reserved?
+}
+
+model Reserved {
+    id      String @id @default(cuid())
+    date    String
+    userId  String @unique
+    storeId String @unique
+    User    User?  @relation(fields: [userId], references: [id])
+    Store   Store? @relation(fields: [storeId], references: [id])
+}
+
+model Review {
+    id     String @id @default(cuid())
+    name   String
+    review String
+}
