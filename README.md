@@ -1,1 +1,1 @@
-Sea Salon
+Sea Salon COmpfest
