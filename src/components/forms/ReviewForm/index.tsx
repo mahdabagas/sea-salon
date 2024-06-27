@@ -13,20 +13,49 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { reviewFormSchema } from "@/lib/form.schem";
+import { supabaseUploadFile } from "@/lib/supabase";
+import { reviewType } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FC } from "react";
+import { useRouter } from "next/navigation";
+import { FC, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 interface ReviewFormProps {}
 
 const ReviewForm: FC<ReviewFormProps> = () => {
+  const router = useRouter();
+  const imageRef = useRef<HTMLInputElement>(null);
+
   const form = useForm<z.infer<typeof reviewFormSchema>>({
     resolver: zodResolver(reviewFormSchema),
   });
 
-  const onSubmit = (val: z.infer<typeof reviewFormSchema>) => {
-    console.log(val);
+  const onSubmit = async (val: z.infer<typeof reviewFormSchema>) => {
+    try {
+      const { imageName, error } = await supabaseUploadFile(
+        val.image,
+        "reviews"
+      );
+      if (error) {
+        throw "Error";
+      }
+      const body: reviewType = {
+        name: val.name,
+        rating: parseInt(val.rating),
+        review: val.review,
+        image: imageName,
+      };
+      await fetch("/api/review", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }).then(() => {
+        router.push("/dashboard/reviews");
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <Form {...form}>
@@ -97,10 +126,13 @@ const ReviewForm: FC<ReviewFormProps> = () => {
               <FormItem>
                 <FormControl>
                   <Input
+                    onChange={(event) =>
+                      field.onChange(
+                        event.target.files && event.target.files[0]
+                      )
+                    }
                     type="file"
-                    {...field}
                     className="w-[360px]"
-                    accept="image/png, image/jpg, image/jpeg"
                   />
                 </FormControl>
                 <FormDescription>File size max. 2MB</FormDescription>

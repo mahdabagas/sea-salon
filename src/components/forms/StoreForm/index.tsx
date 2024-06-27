@@ -13,14 +13,19 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { storeFormSchema } from "@/lib/form.schem";
+import { branchStoreType } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import dayjs from "dayjs";
+import { useRouter } from "next/navigation";
 
 interface StoreFormProps {}
 
 const StoreForm: FC<StoreFormProps> = () => {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof storeFormSchema>>({
     resolver: zodResolver(storeFormSchema),
     defaultValues: {
@@ -28,8 +33,27 @@ const StoreForm: FC<StoreFormProps> = () => {
     },
   });
 
-  const onSubmit = (val: z.infer<typeof storeFormSchema>) => {
-    console.log(val);
+  const onSubmit = async (val: z.infer<typeof storeFormSchema>) => {
+    try {
+      const body: branchStoreType = {
+        name: val.name,
+        location: val.location,
+        duration: parseInt(val.duration),
+        openTime: dayjs(val.openTime).format("HH:mm"),
+        closeTime: dayjs(val.closeTime).format("HH:mm"),
+        service: val.services,
+      };
+
+      await fetch("/api/store", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }).then(() => {
+        router.push("/dashboard/branch-store");
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <Form {...form}>

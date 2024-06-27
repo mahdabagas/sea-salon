@@ -1,3 +1,5 @@
+"use client";
+
 import { FC } from "react";
 import {
   Table,
@@ -9,10 +11,22 @@ import {
 } from "@/components/ui/table";
 import { BRANCH_STORE_COLUMN, DATA_BRANCH_STORE } from "@/constants";
 import { branchStoreType } from "@/types";
+import useSwr from "swr";
+import { fetcher } from "@/lib/utils";
+import Loading from "@/components/atoms/Loading";
 
 interface StoreTableProps {}
 
 const StoreTable: FC<StoreTableProps> = () => {
+  const { data, isLoading, error } = useSwr<branchStoreType[], Error>(
+    "/api/store",
+    fetcher
+  );
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <div className="border">
       <Table>
@@ -25,8 +39,8 @@ const StoreTable: FC<StoreTableProps> = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {DATA_BRANCH_STORE.map((item: branchStoreType, i: number) => (
-            <TableRow key={item.id + i}>
+          {data?.map((item: branchStoreType, i: number) => (
+            <TableRow key={item.id || "" + i}>
               <TableCell>{item.name}</TableCell>
               <TableCell>
                 <ul>

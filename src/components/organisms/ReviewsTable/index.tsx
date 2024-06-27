@@ -1,3 +1,6 @@
+"use client";
+
+import Loading from "@/components/atoms/Loading";
 import {
   Table,
   TableBody,
@@ -7,12 +10,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DATA_REVIEW, REVIEW_COLUMN } from "@/constants";
+import { fetcher } from "@/lib/utils";
 import { reviewType } from "@/types";
 import { FC } from "react";
+import useSwr from "swr";
 
 interface ReviewsTableProps {}
 
 const ReviewsTable: FC<ReviewsTableProps> = () => {
+  const { data, isLoading, error } = useSwr<reviewType[], Error>(
+    "/api/review",
+    fetcher
+  );
+
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <div className="border">
       <Table>
@@ -25,8 +38,8 @@ const ReviewsTable: FC<ReviewsTableProps> = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {DATA_REVIEW.map((item: reviewType, i: number) => (
-            <TableRow key={item.id + i}>
+          {data?.map((item: reviewType, i: number) => (
+            <TableRow key={item.id || "" + i}>
               <TableCell>{item.name}</TableCell>
               <TableCell>{item.rating}</TableCell>
               <TableCell className="max-w-96">{item.review}</TableCell>

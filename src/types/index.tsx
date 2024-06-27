@@ -1,5 +1,5 @@
 export type branchStoreType = {
-  id: string;
+  id?: string;
   name: string;
   location: string;
   openTime: string;
@@ -9,7 +9,7 @@ export type branchStoreType = {
 };
 
 export type reviewType = {
-  id: string;
+  id?: string;
   name: string;
   rating: number;
   review: string;
