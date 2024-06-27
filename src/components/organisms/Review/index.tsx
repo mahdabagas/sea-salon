@@ -13,57 +13,14 @@ import {
 import Image from "next/image";
 import useScreenSize from "@/hooks/useScreenSize";
 import TitleSection from "@/components/atoms/TitleSection";
-
-const REVIEWS = [
-  {
-    images: "/images/review-1.png",
-    name: "Marion",
-    rating: 4,
-    review:
-      "Exceptional salon! Skilled staff, relaxing atmosphere. Left feeling rejuvenated with a perfect haircut. Highly recommend for top-notch service!",
-  },
-  {
-    images: "/images/review-3.png",
-    name: "Laurel",
-    rating: 5,
-    review:
-      "Amazing salon! Professional staff, relaxing ambiance. Left feeling refreshed with a perfect haircut. Highly recommend for excellent service and pampering!",
-  },
-  {
-    images: "/images/review-2.png",
-    name: "Jennie",
-    rating: 4,
-    review:
-      "Outstanding salon experience! Skilled stylists, friendly service. Left feeling fabulous with a perfect haircut. Highly recommended for relaxation!",
-  },
-  {
-    images: "/images/review-2.png",
-    name: "Test",
-    rating: 4,
-    review:
-      "Exceptional salon! Skilled staff, relaxing atmosphere. Left feeling rejuvenated with a perfect haircut. Highly recommend for top-notch service!",
-  },
-  {
-    images: "/images/review-1.png",
-    name: "Halo",
-    rating: 5,
-    review:
-      "Amazing salon! Professional staff, relaxing ambiance. Left feeling refreshed with a perfect haircut. Highly recommend for excellent service and pampering!",
-  },
-  {
-    images: "/images/review-3.png",
-    name: "Bagas",
-    rating: 4,
-    review:
-      "Outstanding salon experience! Skilled stylists, friendly service. Left feeling fabulous with a perfect haircut. Highly recommended for relaxation!",
-  },
-];
+import { DATA_REVIEW } from "@/constants";
+import { reviewType } from "@/types";
 
 interface ReviewProps {}
 
 const Review: FC<ReviewProps> = () => {
   const screenSize = useScreenSize();
-  const [data, setDate] = useState(REVIEWS);
+  const [data, setDate] = useState(DATA_REVIEW);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(3);
@@ -83,17 +40,17 @@ const Review: FC<ReviewProps> = () => {
   }, [screenSize.width]);
 
   return (
-    <section className="w-full bg-secondary-sea px-6 md:px-12 lg:px-16 pt-12">
+    <section className="w-full bg-secondary-sea px-6 md:px-12 lg:px-20 pt-12">
       <TitleSection title="Our Review" className="lg:text-end mb-8" />
       <div className="flex justify-center items-start gap-8 my-4">
-        {currentPosts.map((data, i) => (
+        {currentPosts.map((data: reviewType, i: number) => (
           <div
-            key={i}
+            key={data.id + i}
             className="text-primary-sea border w-80 border-primary-sea p-6 space-y-2"
           >
             <Image
-              alt={data.images}
-              src={data.images}
+              alt={data.image}
+              src={data.image}
               width={1200}
               height={1200}
               className="w-72 h-72"

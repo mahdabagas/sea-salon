@@ -6,10 +6,10 @@ import Services from "@/components/organisms/Services";
 export default function Home() {
   return (
     <main>
-      <Hero/>
-      <Services/>
-      <Review/>
-      <Reservation/>
+      <Hero />
+      <Services />
+      <Review />
+      <Reservation />
     </main>
   );
 }

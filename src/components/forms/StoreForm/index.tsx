@@ -1,0 +1,156 @@
+"use client";
+
+import { TimePicker } from "@/components/atoms/TimePicker";
+import FieldInput from "@/components/organisms/FieldInput";
+import InputService from "@/components/organisms/InputService";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { storeFormSchema } from "@/lib/form.schem";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FC } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+interface StoreFormProps {}
+
+const StoreForm: FC<StoreFormProps> = () => {
+  const form = useForm<z.infer<typeof storeFormSchema>>({
+    resolver: zodResolver(storeFormSchema),
+    defaultValues: {
+      services: [],
+    },
+  });
+
+  const onSubmit = (val: z.infer<typeof storeFormSchema>) => {
+    console.log(val);
+  };
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 mt-6">
+        <FieldInput title="Name" subtitle="Store Name">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    placeholder="eg. Sea Salon"
+                    {...field}
+                    className="w-[360px]"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </FieldInput>
+
+        <FieldInput title="Location" subtitle="Store Address">
+          <FormField
+            control={form.control}
+            name="location"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    placeholder="eg. Jl. Mampang Prapatan, Jakarta Selatan"
+                    {...field}
+                    className="w-[360px]"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </FieldInput>
+
+        <FieldInput title="Time" subtitle="Opening & Closing Hour">
+          <div className="flex justify-between items-center gap-2">
+            <FormField
+              control={form.control}
+              name="openTime"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <TimePicker
+                      date={field.value}
+                      setDate={field.onChange}
+                      label="Open TIme"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <span className="inline-block pt-4">-</span>
+            <FormField
+              control={form.control}
+              name="closeTime"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <TimePicker
+                      date={field.value}
+                      setDate={field.onChange}
+                      label="Close Time"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </FieldInput>
+
+        <FieldInput
+          title="Service Duration"
+          subtitle="Duration per service in hour"
+        >
+          <FormField
+            control={form.control}
+            name="duration"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="eg. 2"
+                    {...field}
+                    className="w-[360px]"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </FieldInput>
+
+        <FieldInput
+          title="Service Duration"
+          subtitle="Duration per service in hour"
+        >
+          <InputService form={form} label="Add Service" name="services" />
+        </FieldInput>
+
+        <div className="flex justify-end items-center">
+          <Button
+            size="lg"
+            className="bg-primary-sea text-secondary-sea font-semibold  "
+          >
+            Submit
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
+};
+
+export default StoreForm;

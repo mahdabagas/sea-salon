@@ -20,11 +20,11 @@ interface ServicesProps {}
 
 const Services: FC<ServicesProps> = () => {
   return (
-    <section className="w-full bg-secondary-sea px-6 md:px-12 lg:px-16 pt-12">
+    <section className="w-full bg-secondary-sea px-6 md:px-12 lg:px-20 pt-12">
       <TitleSection title="Our Services" className="mb-8" />
-      <div className="space-y-4 w-full mt-4 text-primary-sea md:flex md:justify-center lg:justify-end md:items-start gap-4 md:space-y-0">
+      <div className="space-y-4 w-full mt-4 text-primary-sea md:flex md:justify-center md:items-start gap-4 lg:gap-16 md:space-y-0">
         {SERVICES.map((service, i) => (
-          <div key={i} className="lg:w-64">
+          <div key={i} className="lg:w-72">
             <h1 className="font-medium mb-1 text-lg lg:text-xl">
               {service.title}
             </h1>

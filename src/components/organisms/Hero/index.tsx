@@ -14,15 +14,15 @@ interface HeroProps {}
 const Hero: FC<HeroProps> = () => {
   return (
     <section className="bg-secondary-sea">
-      <div className="flex md:pt-12 px-6 md:px-20 items-center justify-center md:h-screen overflow-hidden">
+      <div className="flex md:pt-12 px-6 md:px-12 lg:px-20 items-center justify-center md:h-screen overflow-hidden">
         <div className="flex flex-col-reverse gap-6 md:flex-row items-center max-w-8xl">
           <div className="w-full md:w-1/2">
             <h2
-              className={`${lavishly.className} text-4xl md:text-[2.5rem] lg:text-[3.5rem] text-center md:text-left text-primary-sea leading-tight font-medium`}
+              className={`${lavishly.className} text-4xl md:text-[2.5rem] lg:text-[4.2rem] text-center md:text-left text-primary-sea leading-tight font-medium`}
             >
               Beauty & Elegance Redifined
             </h2>
-            <h3 className="mt-6 md:mt-8 text-sm lg:text-base text-center md:text-left text-primary-sea font-light tracking-wider leading-relaxed">
+            <h3 className="mt-6 md:mt-8 text-sm md:text-base lg:text-lg text-center md:text-left text-primary-sea font-light tracking-wider leading-relaxed">
               Welcome to our luxurious salon, where elegance meets excellence.
               Indulge in a transformative experience with our expert stylists
               and premium services. Step into a world of beauty and relaxation,
@@ -30,7 +30,9 @@ const Hero: FC<HeroProps> = () => {
               awaits!
             </h3>
             <div className="mt-6 flex flex-col sm:flex-row justify-center md:justify-start">
-              <Button className="bg-primary-sea">Booking Now</Button>
+              <Button className="bg-primary-sea" size={"lg"}>
+                Booking Now
+              </Button>
             </div>
           </div>
           <div className="w-full md:w-1/2 flex justify-center md:justify-end">
