@@ -3,46 +3,23 @@ import { branchStoreType, reviewType } from "@/types";
 export const BRANCH_STORE_COLUMN: string[] = [
   "Name",
   "Services",
-  "Duration",
   "Open-Close Time",
   "Location",
 ];
 
 export const REVIEW_COLUMN: string[] = ["Name", "Rating", "Review", "Image"];
 
-export const DUMMYSERVICE = [
-  {
-    id: "recents",
-    label: "Recents",
-  },
-  {
-    id: "home",
-    label: "Home",
-  },
-  {
-    id: "applications",
-    label: "Applications",
-  },
-  {
-    id: "desktop",
-    label: "Desktop",
-  },
-  {
-    id: "downloads",
-    label: "Downloads",
-  },
-  {
-    id: "documents",
-    label: "Documents",
-  },
-] as const;
+export const DUMMY_SERVICE = [
+  "Haircut and Styling",
+  "Color Services",
+  "Hair Treatments",
+];
 
 export const DATA_BRANCH_STORE: branchStoreType[] = [
   {
     id: "1",
     name: "Sea Salon 1",
     service: ["haircuts", "styling", "color", "treatments"],
-    duration: 2,
     openTime: "07:00",
     closeTime: "19:00",
     location: "Kemang, Jakarta Selatan",
@@ -51,7 +28,6 @@ export const DATA_BRANCH_STORE: branchStoreType[] = [
     id: "2",
     name: "Sea Salon 2",
     service: ["haircuts", "styling", "color", "treatments"],
-    duration: 2,
     openTime: "07:00",
     closeTime: "20:00",
     location: "Mampang, Jakarta Selatan",
@@ -60,7 +36,6 @@ export const DATA_BRANCH_STORE: branchStoreType[] = [
     id: "3",
     name: "Sea Salon 3",
     service: ["haircuts", "styling", "color", "treatments"],
-    duration: 2,
     openTime: "07:00",
     closeTime: "21:00",
     location: "Kebayoran, Jakarta Selatan",

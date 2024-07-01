@@ -9,9 +9,10 @@ interface TimePickerProps {
   date: Date | undefined;
   setDate: (date: Date | undefined) => void;
   label?: string;
+  variant?: "default" | "sea";
 }
 
-export function TimePicker({ date, setDate, label }: TimePickerProps) {
+export function TimePicker({ date, setDate, label, variant }: TimePickerProps) {
   const minuteRef = React.useRef<HTMLInputElement>(null);
   const hourRef = React.useRef<HTMLInputElement>(null);
   const secondRef = React.useRef<HTMLInputElement>(null);
@@ -26,6 +27,10 @@ export function TimePicker({ date, setDate, label }: TimePickerProps) {
           <TimePickerInput
             picker="hours"
             date={date}
+            className={`${
+              variant === "sea" &&
+              "text-primary-sea bg-secondary-sea border-primary-sea focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:text-primary-sea"
+            }`}
             setDate={setDate}
             ref={hourRef}
             onRightFocus={() => minuteRef.current?.focus()}
@@ -35,6 +40,10 @@ export function TimePicker({ date, setDate, label }: TimePickerProps) {
           <TimePickerInput
             picker="minutes"
             date={date}
+            className={`${
+              variant === "sea" &&
+              "text-primary-sea bg-secondary-sea border-primary-sea focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:text-primary-sea"
+            }`}
             setDate={setDate}
             ref={minuteRef}
             onLeftFocus={() => hourRef.current?.focus()}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -13,21 +13,25 @@ import {
 import Image from "next/image";
 import useScreenSize from "@/hooks/useScreenSize";
 import TitleSection from "@/components/atoms/TitleSection";
-import { DATA_REVIEW } from "@/constants";
 import { reviewType } from "@/types";
+import useSWR from "swr";
+import { fetcher } from "@/lib/utils";
+import Loading from "@/components/atoms/Loading";
 
-interface ReviewProps {}
+const Review = () => {
+  const { data, isLoading } = useSWR<reviewType[], Error>(
+    "/api/review",
+    fetcher
+  );
 
-const Review: FC<ReviewProps> = () => {
   const screenSize = useScreenSize();
-  const [data, setDate] = useState(DATA_REVIEW);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(3);
 
   const lastPostIndex = currentPage * postsPerPage;
   const firstPostIndex = lastPostIndex - postsPerPage;
-  const currentPosts = data.slice(firstPostIndex, lastPostIndex);
+  const currentPosts = data?.slice(firstPostIndex, lastPostIndex) || [];
 
   useEffect(() => {
     if (screenSize.width > 0 && screenSize.width < 640) {
@@ -42,31 +46,37 @@ const Review: FC<ReviewProps> = () => {
   return (
     <section className="w-full bg-secondary-sea px-6 md:px-12 lg:px-20 pt-12">
       <TitleSection title="Our Review" className="lg:text-end mb-8" />
-      <div className="flex justify-center items-start gap-8 my-4">
-        {currentPosts.map((data: reviewType, i: number) => (
-          <div
-            key={data.id + i}
-            className="text-primary-sea border w-80 border-primary-sea p-6 space-y-2"
-          >
-            <Image
-              alt={data.image}
-              src={data.image}
-              width={1200}
-              height={1200}
-              className="w-72 h-72"
-            />
-            <h1>{data.name}</h1>
-            <div>{data.rating}</div>
-            <p className="line-clamp-3">{data.review}</p>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <>
+          <div className="flex justify-center items-start gap-8 my-4">
+            {currentPosts.map((data: reviewType, i: number) => (
+              <div
+                key={data.id || "" + i}
+                className="text-primary-sea border w-80 border-primary-sea p-6 space-y-2"
+              >
+                <Image
+                  alt={data.image}
+                  src={data.image}
+                  width={1200}
+                  height={1200}
+                  className="object-cover w-full h-full"
+                />
+                <h1>{data.name}</h1>
+                <div>{data.rating}</div>
+                <p className="line-clamp-3">{data.review}</p>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <PaginationSection
-        totalPosts={data.length}
-        postsPerPage={postsPerPage}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-      />
+          <PaginationSection
+            totalPosts={data?.length}
+            postsPerPage={postsPerPage}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+          />
+        </>
+      )}
     </section>
   );
 };

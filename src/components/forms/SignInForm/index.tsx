@@ -14,18 +14,24 @@ import { signInFormSchema } from "@/lib/form.schem";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { FC } from "react";
+import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useRouter } from "next/navigation";
 
 interface SignInFormProps {}
 
 const SignInForm: FC<SignInFormProps> = () => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof signInFormSchema>>({
     resolver: zodResolver(signInFormSchema),
   });
 
   const onSubmit = async (val: z.infer<typeof signInFormSchema>) => {
-    console.log(val);
+    const authenticated = await signIn("credentials", {
+      ...val,
+      callbackUrl: "/dashboard",
+    });
   };
   return (
     <Form {...form}>

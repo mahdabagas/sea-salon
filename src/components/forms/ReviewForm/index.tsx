@@ -25,7 +25,6 @@ interface ReviewFormProps {}
 
 const ReviewForm: FC<ReviewFormProps> = () => {
   const router = useRouter();
-  const imageRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<z.infer<typeof reviewFormSchema>>({
     resolver: zodResolver(reviewFormSchema),

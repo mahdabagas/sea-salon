@@ -44,12 +44,17 @@ const StoreTable: FC<StoreTableProps> = () => {
               <TableCell>{item.name}</TableCell>
               <TableCell>
                 <ul>
-                  {item.service.map((data: string, i: number) => (
-                    <li key={data + i}>- {data}</li>
-                  ))}
+                  {item.service.map((data: string, i: number) => {
+                    const service = data.split("|").at(0);
+                    const duration = data.split("|").pop();
+                    return (
+                      <li key={data + i}>
+                        - {service}, {duration} hour{" "}
+                      </li>
+                    );
+                  })}
                 </ul>
               </TableCell>
-              <TableCell>{item.duration}</TableCell>
               <TableCell>
                 {item.openTime} - {item.closeTime}
               </TableCell>

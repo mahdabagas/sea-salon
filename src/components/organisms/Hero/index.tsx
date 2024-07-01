@@ -14,7 +14,7 @@ interface HeroProps {}
 const Hero: FC<HeroProps> = () => {
   return (
     <section className="bg-secondary-sea">
-      <div className="flex md:pt-12 px-6 md:px-12 lg:px-20 items-center justify-center md:h-screen overflow-hidden">
+      <div className="flex px-6 md:px-12 lg:px-20 items-center justify-center md:h-screen overflow-hidden">
         <div className="flex flex-col-reverse gap-6 md:flex-row items-center max-w-8xl">
           <div className="w-full md:w-1/2">
             <h2
@@ -30,7 +30,11 @@ const Hero: FC<HeroProps> = () => {
               awaits!
             </h3>
             <div className="mt-6 flex flex-col sm:flex-row justify-center md:justify-start">
-              <Button className="bg-primary-sea" size={"lg"}>
+              <Button
+                className="border-2 hover:bg-secondary-sea hover:text-primary-sea
+           border-primary-sea bg-primary-sea text-secondary-sea md:w-64"
+                size={"lg"}
+              >
                 Booking Now
               </Button>
             </div>

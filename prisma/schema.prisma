@@ -7,14 +7,19 @@ datasource db {
     url      = env("POSTGRES_PRISMA_URL")
 }
 
+enum Role {
+    USER
+    ADMIN
+}
+
 model User {
-    id       String    @id @default(cuid())
+    id       String @id @default(cuid())
     name     String
     email    String
     phone    String
     password String
-    Role     String
-    Reserved Reserved?
+    role     Role @default(USER)
+    Reserved Reserved[]
 }
 
 model Store {
@@ -23,16 +28,18 @@ model Store {
     location  String
     openTime  String
     closeTime String
-    duration  Int
     service   String[]
     Reserved  Reserved[]
 }
 
 model Reserved {
     id      String @id @default(cuid())
-    date    String
-    userId  String @unique
-    storeId String @unique
+    name    String
+    phone   String
+    date    DateTime
+    services String[]
+    userId  String 
+    storeId String
     User    User?  @relation(fields: [userId], references: [id])
     Store   Store? @relation(fields: [storeId], references: [id])
 }

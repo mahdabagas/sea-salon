@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { signUpFormSchema } from "@/lib/form.schem";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -20,12 +21,23 @@ import { z } from "zod";
 interface SignUpFormProps {}
 
 const SignUpForm: FC<SignUpFormProps> = () => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof signUpFormSchema>>({
     resolver: zodResolver(signUpFormSchema),
   });
 
   const onSubmit = async (val: z.infer<typeof signUpFormSchema>) => {
-    console.log(val);
+    try {
+      await fetch("/api/user", {
+        method: "POST",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify(val),
+      });
+
+      router.push("/signin");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

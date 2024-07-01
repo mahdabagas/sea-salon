@@ -38,7 +38,6 @@ const StoreForm: FC<StoreFormProps> = () => {
       const body: branchStoreType = {
         name: val.name,
         location: val.location,
-        duration: parseInt(val.duration),
         openTime: dayjs(val.openTime).format("HH:mm"),
         closeTime: dayjs(val.closeTime).format("HH:mm"),
         service: val.services,
@@ -132,29 +131,6 @@ const StoreForm: FC<StoreFormProps> = () => {
               )}
             />
           </div>
-        </FieldInput>
-
-        <FieldInput
-          title="Service Duration"
-          subtitle="Duration per service in hour"
-        >
-          <FormField
-            control={form.control}
-            name="duration"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="eg. 2"
-                    {...field}
-                    className="w-[360px]"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
         </FieldInput>
 
         <FieldInput

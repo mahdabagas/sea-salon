@@ -9,9 +9,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { DATA_REVIEW, REVIEW_COLUMN } from "@/constants";
+import { REVIEW_COLUMN } from "@/constants";
 import { fetcher } from "@/lib/utils";
 import { reviewType } from "@/types";
+import Link from "next/link";
 import { FC } from "react";
 import useSwr from "swr";
 
@@ -43,7 +44,11 @@ const ReviewsTable: FC<ReviewsTableProps> = () => {
               <TableCell>{item.name}</TableCell>
               <TableCell>{item.rating}</TableCell>
               <TableCell className="max-w-96">{item.review}</TableCell>
-              <TableCell>{item.image}</TableCell>
+              <TableCell className="max-w-48">
+                <Link href={item.image} target="_blank">
+                  {item.image.split("/public")[2]}
+                </Link>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

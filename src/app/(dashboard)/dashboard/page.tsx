@@ -1,13 +1,10 @@
+import { redirect } from "next/navigation";
 import { FC } from "react";
 
 interface DashboardProps {}
 
 const Dashboard: FC<DashboardProps> = () => {
-  return (
-    <div>
-      <h1 className="text-3xl">Dashboard</h1>
-    </div>
-  );
+  redirect("/dashboard/branch-store");
 };
 
 export default Dashboard;

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Lavishly_Yours, Poppins } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "../globals.css";
 import LogoTextSea from "@/components/atoms/LogoTextSea";
 const poppins = Poppins({ subsets: ["latin"], weight: "400" });

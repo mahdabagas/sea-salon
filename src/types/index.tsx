@@ -4,7 +4,6 @@ export type branchStoreType = {
   location: string;
   openTime: string;
   closeTime: string;
-  duration: number;
   service: string[];
 };
 
@@ -14,4 +13,14 @@ export type reviewType = {
   rating: number;
   review: string;
   image: string;
+};
+
+export type bookingType = {
+  id?: string;
+  name: string;
+  phone: string;
+  date: Date;
+  services: string[];
+  userId: string;
+  storeId: string;
 };

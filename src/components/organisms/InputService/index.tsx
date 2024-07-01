@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { PlusIcon, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { Label } from "@/components/ui/label";
 
 interface InputServiceProps {
   form: any;
@@ -20,20 +21,30 @@ interface InputServiceProps {
 const InputService: FC<InputServiceProps> = ({ form, name, label }) => {
   const [isHide, setHide] = useState<boolean>(false);
   const [values, setValues] = useState<string[]>([]);
-  const [input, setInput] = useState<string>("");
+  const [input, setInput] = useState({
+    service: "",
+    duration: "",
+  });
 
+  const emptyInput = input.service.length === 0 || input.duration.length === 0;
+  console.log(emptyInput);
   const handleSaveValue = () => {
-    if (input === "") {
+    if (emptyInput) {
       return;
     }
 
-    const newValue: any = [...values, input];
+    const inputResult = input.service + "|" + input.duration;
+
+    const newValue: any = [...values, inputResult];
 
     setValues(newValue);
 
     form.setValue(name, newValue);
 
-    setInput("");
+    setInput({
+      service: "",
+      duration: "",
+    });
   };
 
   const handleDeleteValue = (item: string) => {
@@ -69,15 +80,41 @@ const InputService: FC<InputServiceProps> = ({ form, name, label }) => {
                 {label}
               </Button>
               {isHide && (
-                <div className="my-6 flex flex-row gap-4 w-full">
-                  <Input
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                  />
+                <div className="my-2 flex flex-row gap-4 w-full items-end">
+                  <div className="flex gap-2 w-full">
+                    <div className="w-3/4">
+                      <Label htmlFor="input_service">Service name</Label>
+                      <Input
+                        id="input_service"
+                        value={input.service}
+                        onChange={(e) =>
+                          setInput((prev) => ({
+                            ...prev,
+                            service: e.target.value,
+                          }))
+                        }
+                      />
+                    </div>
+                    <div className="w-1/4">
+                      <Label htmlFor="input_duration">Duration</Label>
+                      <Input
+                        id="input_duration"
+                        value={input.duration}
+                        type="number"
+                        onChange={(e) =>
+                          setInput((prev) => ({
+                            ...prev,
+                            duration: e.target.value,
+                          }))
+                        }
+                      />
+                    </div>
+                  </div>
                   <Button
                     type="button"
+                    disabled={emptyInput}
                     onClick={handleSaveValue}
-                    className="bg-primary-sea hover:bg-primary-sea/75"
+                    className="bg-primary-sea hover:bg-primary-sea/75 items-end"
                   >
                     Save
                   </Button>
@@ -87,18 +124,22 @@ const InputService: FC<InputServiceProps> = ({ form, name, label }) => {
                 <div className="space-y-3 p-2 border border-primary-sea rounded-sm">
                   <p className="font-medium">Daftar Service</p>
                   <Separator />
-                  {values.map((item: string, key: number) => (
-                    <div
-                      key={key}
-                      className="flex items-center justify-between px-0"
-                    >
-                      <p>- {item}</p>
-                      <X
-                        className="block w-5 h-5 cursor-pointer"
-                        onClick={() => handleDeleteValue(item)}
-                      />
-                    </div>
-                  ))}
+                  {values.map((item: string, key: number) => {
+                    const service = item.split("|").at(0);
+                    const duration = item.split("|").pop();
+                    return (
+                      <div
+                        key={key}
+                        className="flex items-center justify-between px-0"
+                      >
+                        <p>{`${service} - ${duration} hour`}</p>
+                        <X
+                          className="block w-5 h-5 cursor-pointer"
+                          onClick={() => handleDeleteValue(item)}
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
