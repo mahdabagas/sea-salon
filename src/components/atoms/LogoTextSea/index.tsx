@@ -5,6 +5,7 @@ const lavishly = Lavishly_Yours({ subsets: ["latin"], weight: "400" });
 
 interface LogoTextSeaProps {
   className?: string;
+  props?: any;
 }
 
 const LogoTextSea: FC<LogoTextSeaProps> = ({ className }) => {

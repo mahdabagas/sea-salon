@@ -5,7 +5,6 @@ import LogoTextSea from "@/components/atoms/LogoTextSea";
 import { useSession } from "next-auth/react";
 import MenuAuth from "@/components/organisms/AuthMenu";
 import { useRouter } from "next/navigation";
-import useScreenSize from "@/hooks/useScreenSize";
 
 interface NavbarProps {}
 
@@ -15,7 +14,9 @@ const Navbar: FC<NavbarProps> = () => {
 
   return (
     <header className="bg-secondary-sea/75 backdrop-blur-sm py-4 px-6 md:px-12 lg:px-20 flex justify-between items-center fixed top-0 left-0 right-0 z-50">
-      <LogoTextSea className="text-3xl lg:text-4xl" />
+      <div onClick={() => router.push("/")}>
+        <LogoTextSea className="text-3xl lg:text-4xl cursor-pointer" />
+      </div>
       {session ? (
         <MenuAuth />
       ) : (

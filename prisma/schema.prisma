@@ -49,5 +49,5 @@ model Review {
     name   String
     rating Int
     review String
-    image  String
+    image  String?
 }

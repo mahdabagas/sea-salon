@@ -9,6 +9,14 @@ export const BRANCH_STORE_COLUMN: string[] = [
 
 export const REVIEW_COLUMN: string[] = ["Name", "Rating", "Review", "Image"];
 
+export const BOOKING_COLUMN: string[] = [
+  "Name",
+  "Phone",
+  "Date",
+  "Service",
+  "Branch Store",
+];
+
 export const DUMMY_SERVICE = [
   "Haircut and Styling",
   "Color Services",

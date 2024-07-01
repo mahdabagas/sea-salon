@@ -12,7 +12,7 @@ export type reviewType = {
   name: string;
   rating: number;
   review: string;
-  image: string;
+  image?: string;
 };
 
 export type bookingType = {
@@ -23,4 +23,15 @@ export type bookingType = {
   services: string[];
   userId: string;
   storeId: string;
+};
+
+export type bookingListType = {
+  id: string;
+  name: string;
+  phone: string;
+  date: Date;
+  services: string[];
+  nameStore: string;
+  timeStore: string;
+  locationStore: string;
 };

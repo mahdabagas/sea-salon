@@ -39,6 +39,17 @@ export const reviewFormSchema = z.object({
   image: z.any({ required_error: "Image is required" }),
 });
 
+export const reviewUserFormSchema = z.object({
+  rating: z
+    .number({ required_error: "Rating is required" })
+    .refine((val) => val > 0, { message: "Rating is required" }),
+  review: z
+    .string({ required_error: "Review is required" })
+    .refine((val) => val.length >= 1, {
+      message: "Review is required",
+    }),
+});
+
 export const signInFormSchema = z.object({
   email: z
     .string({ required_error: "Email is required" })
