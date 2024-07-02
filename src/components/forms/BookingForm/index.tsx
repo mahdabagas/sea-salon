@@ -35,6 +35,7 @@ import dayjs from "dayjs";
 import { TimePicker } from "@/components/atoms/TimePicker";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/components/ui/use-toast";
+import { TbClockHour3 } from "react-icons/tb";
 
 const defaultValue = {
   storeId: "",
@@ -69,11 +70,13 @@ const BookingForm: FC<BookingFormProps> = () => {
   const [services, setServices] = useState<string[]>([]);
   const isStoreEmpty = store.id?.length === 0;
 
+  console.log(form.getValues());
+
   const onSubmit = async (val: z.infer<typeof bookingFormSchema>) => {
     setLoading(true);
     try {
       const dateFormat = dayjs(val.date).format("DD MMM YYYY");
-      const timeFormat = dayjs(val.time).format("HH:mm");
+      const timeFormat = val.time;
       const dateBooking = dayjs(`${dateFormat} ${timeFormat}`).toDate();
 
       const body: bookingType = {
@@ -98,8 +101,8 @@ const BookingForm: FC<BookingFormProps> = () => {
         // reset Form
         form.setValue("name", "");
         form.setValue("phone", "");
+        form.setValue("time", "");
         form.resetField("date");
-        form.resetField("time");
         form.resetField("services", {
           defaultValue: [""],
         });
@@ -233,12 +236,22 @@ const BookingForm: FC<BookingFormProps> = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <TimePicker
-                        date={field.value}
-                        setDate={field.onChange}
-                        label=""
-                        variant="sea"
-                      />
+                      <div className="relative">
+                        <div className="absolute inset-y-0 end-0 top-0 flex items-center pe-3 pointer-events-none">
+                          <TbClockHour3
+                            className="stroke-primary-sea/60 bg-secondary-sea"
+                            size={18}
+                          />
+                        </div>
+                        <Input
+                          min={store.openTime}
+                          max={store.closeTime}
+                          type="time"
+                          placeholder="Enter your number"
+                          {...field}
+                          className="bg-secondary-sea border-primary-sea focus-visible:ring-0 focus-visible:ring-offset-0 text-primary-sea placeholder:text-primary-sea/80 focus-visible::bg-primary-sea"
+                        />
+                      </div>
                     </FormControl>
                     <FormMessage className="text-xs" />
                   </FormItem>

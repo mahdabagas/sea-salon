@@ -13,7 +13,11 @@ export const bookingFormSchema = z.object({
       message: "Phone should have minimal 3 characters",
     }),
   date: z.date({ required_error: "You need to select a date" }),
-  time: z.date({ required_error: "Time is required" }),
+  time: z
+    .string({ required_error: "Time is required" })
+    .refine((val) => val.length > 0, {
+      message: "Time is Required",
+    }),
   storeId: z.string({ required_error: "You need to select a store" }),
   services: z
     .string({ required_error: "Services is required" })
