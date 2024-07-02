@@ -7,9 +7,13 @@ import { bookingListType } from "@/types";
 export async function GET() {
   const session = await getServerSession(authOptions);
 
+  if (!session) {
+    return NextResponse.json([]);
+  }
+
   const result = await prisma.reserved.findMany({
     where: {
-      userId: session?.user.id,
+      userId: session?.user?.id,
     },
     include: {
       Store: true,
