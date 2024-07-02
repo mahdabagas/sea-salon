@@ -34,11 +34,15 @@ const BookingTable: FC<BookingTableProps> = () => {
   const currentPosts = data?.slice(firstPostIndex, lastPostIndex) || [];
 
   if (isLoading) {
-    return <Loading />;
+    return (
+      <div className="mt-8">
+        <Loading size={46} />
+      </div>
+    );
   }
   return (
     <>
-      <Table className="border-primary-sea w-full mx-auto text-primary-sea ">
+      <Table className="border-primary-sea/20 mb-4 w-full mx-auto text-primary-sea border-y mt-8 ">
         <TableHeader>
           <TableRow>
             {BOOKING_COLUMN.map((item: string, i: number) => (
@@ -54,7 +58,7 @@ const BookingTable: FC<BookingTableProps> = () => {
         <TableBody className="h-96">
           {currentPosts?.map((item: bookingListType, i: number) => (
             <TableRow key={item.id || "" + i}>
-              <TableCell className="w-1/12 align-top p-2">
+              <TableCell className="w-2/12 align-top p-2">
                 {item.name}
               </TableCell>
               <TableCell className="w-1/12 align-top p-2">
@@ -76,7 +80,7 @@ const BookingTable: FC<BookingTableProps> = () => {
                   })}
                 </ul>
               </TableCell>
-              <TableCell className="w-4/12 align-top p-2">
+              <TableCell className="w-5/12 align-top p-2">
                 <div
                   className="grid"
                   style={{ gridTemplateColumns: "8rem 1fr" }}
@@ -103,7 +107,6 @@ const BookingTable: FC<BookingTableProps> = () => {
           ))}
         </TableBody>
       </Table>
-      <Separator className="bg-primary-sea/20 my-4" />
       <PaginationSection
         totalPosts={data?.length}
         postsPerPage={postsPerPage}

@@ -13,25 +13,56 @@ import { Input } from "@/components/ui/input";
 import { signInFormSchema } from "@/lib/form.schem";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
+import Loading from "@/components/atoms/Loading";
 
 interface SignInFormProps {}
 
 const SignInForm: FC<SignInFormProps> = () => {
-  const router = useRouter();
   const form = useForm<z.infer<typeof signInFormSchema>>({
     resolver: zodResolver(signInFormSchema),
   });
 
+  const router = useRouter();
+  const { toast } = useToast();
+  const [loading, setLoading] = useState<boolean>(false);
+
   const onSubmit = async (val: z.infer<typeof signInFormSchema>) => {
-    const authenticated = await signIn("credentials", {
-      ...val,
-      callbackUrl: "/dashboard",
-    });
+    setLoading(true);
+    try {
+      const authenticated = await signIn("credentials", {
+        ...val,
+        redirect: false,
+      });
+
+      if (authenticated?.error) {
+        toast({
+          title: "Error",
+          description: "Email or password maybe wrong",
+        });
+        setLoading(false);
+        return;
+      }
+
+      toast({
+        title: "Success",
+        description: "Succes Login",
+      });
+
+      await setLoading(false);
+      await router.push("/dashboard");
+    } catch (error) {
+      setLoading(false);
+      toast({
+        title: "Error",
+        description: "Please try again",
+      });
+    }
   };
   return (
     <Form {...form}>
@@ -49,7 +80,7 @@ const SignInForm: FC<SignInFormProps> = () => {
                   type="email"
                   placeholder="Enter your email"
                   {...field}
-                  className="bg-secondary-sea border-primary-sea focus-visible:ring-0 focus-visible:ring-offset-0"
+                  className="bg-secondary-sea border-primary-sea text-primary-sea focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-primary-sea/80"
                 />
               </FormControl>
               <FormMessage />
@@ -68,7 +99,7 @@ const SignInForm: FC<SignInFormProps> = () => {
                 <Input
                   type="password"
                   placeholder="Enter your pasword"
-                  className="bg-secondary-sea border-primary-sea focus-visible:ring-0 focus-visible:ring-offset-0"
+                  className="bg-secondary-sea border-primary-sea focus-visible:ring-0 focus-visible:ring-offset-0 text-primary-sea placeholder:text-primary-sea/80"
                   {...field}
                 />
               </FormControl>
@@ -78,9 +109,10 @@ const SignInForm: FC<SignInFormProps> = () => {
         />
         <Button
           type="submit"
+          disabled={loading}
           className="w-full bg-primary-sea text-secondary-sea hover:bg-primary-sea/80"
         >
-          Sign In
+          {loading ? <Loading variant="secondary" /> : "Sign In"}
         </Button>
         <div className="text-primary-sea/80 text-sm mt-6">
           <p className="inline-flex">Dont`t have an account</p>{" "}

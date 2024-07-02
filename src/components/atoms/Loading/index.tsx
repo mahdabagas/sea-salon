@@ -2,14 +2,16 @@ import { Loader2Icon } from "lucide-react";
 import { FC } from "react";
 
 interface LoadingProps {
-  size?: string;
+  size?: number;
+  variant?: "primary" | "secondary";
 }
 
-const Loading: FC<LoadingProps> = ({ size = "12" }) => {
+const Loading: FC<LoadingProps> = ({ size = 20, variant = "primary" }) => {
   return (
     <div className="flex justify-center items-center">
       <Loader2Icon
-        className={`animate-spin text-primary-sea block w-${size} h-${size}`}
+        size={size}
+        className={`animate-spin text-${variant}-sea block `}
       />
     </div>
   );

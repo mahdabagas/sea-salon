@@ -12,7 +12,7 @@ export type reviewType = {
   name: string;
   rating: number;
   review: string;
-  image?: string;
+  image?: string | null;
 };
 
 export type bookingType = {

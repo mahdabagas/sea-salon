@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@/components/atoms/Loading";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -10,33 +11,47 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
 import { signUpFormSchema } from "@/lib/form.schem";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 interface SignUpFormProps {}
 
 const SignUpForm: FC<SignUpFormProps> = () => {
-  const router = useRouter();
   const form = useForm<z.infer<typeof signUpFormSchema>>({
     resolver: zodResolver(signUpFormSchema),
   });
 
+  const router = useRouter();
+  const { toast } = useToast();
+  const [loading, setLoading] = useState<boolean>(false);
+
   const onSubmit = async (val: z.infer<typeof signUpFormSchema>) => {
+    setLoading(true);
     try {
       await fetch("/api/user", {
         method: "POST",
         headers: { "Content-type": "application/json" },
         body: JSON.stringify(val),
+      }).then(() => {
+        toast({
+          title: "Success",
+          description: "Create account success",
+        });
+        setLoading(false);
+        router.push("/signin");
       });
-
-      router.push("/signin");
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+      toast({
+        title: "Error",
+        description: "Please try again",
+      });
     }
   };
 
@@ -54,7 +69,7 @@ const SignUpForm: FC<SignUpFormProps> = () => {
                   type="text"
                   placeholder="Enter your name"
                   {...field}
-                  className="bg-secondary-sea border-primary-sea focus-visible:ring-0 focus-visible:ring-offset-0"
+                  className="bg-secondary-sea border-primary-sea text-primary-sea focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-primary-sea/80"
                 />
               </FormControl>
               <FormMessage />
@@ -74,7 +89,7 @@ const SignUpForm: FC<SignUpFormProps> = () => {
                   type="email"
                   placeholder="Enter your email"
                   {...field}
-                  className="bg-secondary-sea border-primary-sea focus-visible:ring-0 focus-visible:ring-offset-0"
+                  className="bg-secondary-sea border-primary-sea text-primary-sea focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-primary-sea/80"
                 />
               </FormControl>
               <FormMessage />
@@ -94,7 +109,7 @@ const SignUpForm: FC<SignUpFormProps> = () => {
                   type="number"
                   placeholder="Enter your number"
                   {...field}
-                  className="bg-secondary-sea border-primary-sea focus-visible:ring-0 focus-visible:ring-offset-0"
+                  className="bg-secondary-sea border-primary-sea text-primary-sea focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-primary-sea/80"
                 />
               </FormControl>
               <FormMessage />
@@ -113,7 +128,7 @@ const SignUpForm: FC<SignUpFormProps> = () => {
                 <Input
                   type="password"
                   placeholder="Enter your pasword"
-                  className="bg-secondary-sea border-primary-sea focus-visible:ring-0 focus-visible:ring-offset-0"
+                  className="bg-secondary-sea border-primary-sea text-primary-sea focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-primary-sea/80"
                   {...field}
                 />
               </FormControl>
@@ -122,10 +137,11 @@ const SignUpForm: FC<SignUpFormProps> = () => {
           )}
         />
         <Button
+          disabled={loading}
           type="submit"
           className="w-full bg-primary-sea text-secondary-sea hover:bg-primary-sea/80"
         >
-          Sign Up
+          {loading ? <Loading variant="secondary" /> : "Sign Up"}
         </Button>
         <div className="text-primary-sea/90 text-sm mt-6">
           <p className="inline-flex">Already have an account</p>{" "}

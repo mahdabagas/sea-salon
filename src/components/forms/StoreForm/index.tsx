@@ -15,17 +15,17 @@ import { Input } from "@/components/ui/input";
 import { storeFormSchema } from "@/lib/form.schem";
 import { branchStoreType } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
+import Loading from "@/components/atoms/Loading";
+import { useToast } from "@/components/ui/use-toast";
 
 interface StoreFormProps {}
 
 const StoreForm: FC<StoreFormProps> = () => {
-  const router = useRouter();
-
   const form = useForm<z.infer<typeof storeFormSchema>>({
     resolver: zodResolver(storeFormSchema),
     defaultValues: {
@@ -33,7 +33,12 @@ const StoreForm: FC<StoreFormProps> = () => {
     },
   });
 
+  const router = useRouter();
+  const { toast } = useToast();
+  const [loading, setLoading] = useState<boolean>(false);
+
   const onSubmit = async (val: z.infer<typeof storeFormSchema>) => {
+    setLoading(true);
     try {
       const body: branchStoreType = {
         name: val.name,
@@ -48,10 +53,19 @@ const StoreForm: FC<StoreFormProps> = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       }).then(() => {
+        setLoading(false);
+        toast({
+          title: "Success",
+          description: "Create store success",
+        });
         router.push("/dashboard/branch-store");
       });
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+      toast({
+        title: "Error",
+        description: "Please try again",
+      });
     }
   };
   return (
@@ -67,7 +81,7 @@ const StoreForm: FC<StoreFormProps> = () => {
                   <Input
                     placeholder="eg. Sea Salon"
                     {...field}
-                    className="w-[360px]"
+                    className="w-[360px] bg-secondary-sea border-primary-sea focus-visible:ring-0 focus-visible:ring-offset-0 text-primary-sea placeholder:text-primary-sea/80"
                   />
                 </FormControl>
                 <FormMessage />
@@ -86,7 +100,7 @@ const StoreForm: FC<StoreFormProps> = () => {
                   <Input
                     placeholder="eg. Jl. Mampang Prapatan, Jakarta Selatan"
                     {...field}
-                    className="w-[360px]"
+                    className="w-[360px] bg-secondary-sea border-primary-sea focus-visible:ring-0 focus-visible:ring-offset-0 text-primary-sea placeholder:text-primary-sea/80"
                   />
                 </FormControl>
                 <FormMessage />
@@ -106,7 +120,8 @@ const StoreForm: FC<StoreFormProps> = () => {
                     <TimePicker
                       date={field.value}
                       setDate={field.onChange}
-                      label="Open TIme"
+                      label="Open Time"
+                      variant="sea"
                     />
                   </FormControl>
                   <FormMessage />
@@ -124,6 +139,7 @@ const StoreForm: FC<StoreFormProps> = () => {
                       date={field.value}
                       setDate={field.onChange}
                       label="Close Time"
+                      variant="sea"
                     />
                   </FormControl>
                   <FormMessage />
@@ -142,10 +158,10 @@ const StoreForm: FC<StoreFormProps> = () => {
 
         <div className="flex justify-end items-center">
           <Button
-            size="lg"
-            className="bg-primary-sea text-secondary-sea font-semibold  "
+            disabled={loading}
+            className="bg-primary-sea text-secondary-sea font-semibold w-44 hover:bg-primary-sea/80"
           >
-            Submit
+            {loading ? <Loading variant="secondary" /> : "Submit"}
           </Button>
         </div>
       </form>

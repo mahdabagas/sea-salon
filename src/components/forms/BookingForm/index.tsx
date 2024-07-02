@@ -34,6 +34,7 @@ import Loading from "@/components/atoms/Loading";
 import dayjs from "dayjs";
 import { TimePicker } from "@/components/atoms/TimePicker";
 import { useSession } from "next-auth/react";
+import { useToast } from "@/components/ui/use-toast";
 
 const defaultValue = {
   storeId: "",
@@ -55,6 +56,8 @@ const BookingForm: FC<BookingFormProps> = () => {
     defaultValues: defaultValue,
   });
 
+  const { toast } = useToast();
+  const [loading, setLoading] = useState<boolean>(false);
   const [store, setStore] = useState<branchStoreType>({
     id: "",
     closeTime: "",
@@ -67,6 +70,7 @@ const BookingForm: FC<BookingFormProps> = () => {
   const isStoreEmpty = store.id?.length === 0;
 
   const onSubmit = async (val: z.infer<typeof bookingFormSchema>) => {
+    setLoading(true);
     try {
       const dateFormat = dayjs(val.date).format("DD MMM YYYY");
       const timeFormat = dayjs(val.time).format("HH:mm");
@@ -86,6 +90,11 @@ const BookingForm: FC<BookingFormProps> = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       }).then(() => {
+        setLoading(false);
+        toast({
+          title: "Success",
+          description: "booking succes",
+        });
         // reset Form
         form.setValue("name", "");
         form.setValue("phone", "");
@@ -96,7 +105,11 @@ const BookingForm: FC<BookingFormProps> = () => {
         });
       });
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+      toast({
+        title: "Error",
+        description: "Please try again",
+      });
     }
   };
 
@@ -117,7 +130,7 @@ const BookingForm: FC<BookingFormProps> = () => {
                     type="text"
                     placeholder="Enter your name"
                     {...field}
-                    className="bg-secondary-sea border-primary-sea focus-visible:ring-0 focus-visible:ring-offset-0 text-primary-sea placeholder:text-primary-sea"
+                    className="bg-secondary-sea border-primary-sea focus-visible:ring-0 focus-visible:ring-offset-0 text-primary-sea placeholder:text-primary-sea/80"
                   />
                 </FormControl>
                 <FormMessage className="text-xs" />
@@ -138,7 +151,7 @@ const BookingForm: FC<BookingFormProps> = () => {
                     type="number"
                     placeholder="Enter your number"
                     {...field}
-                    className="bg-secondary-sea border-primary-sea focus-visible:ring-0 focus-visible:ring-offset-0 text-primary-sea placeholder:text-primary-sea"
+                    className="bg-secondary-sea border-primary-sea focus-visible:ring-0 focus-visible:ring-offset-0 text-primary-sea placeholder:text-primary-sea/80"
                   />
                 </FormControl>
                 <FormMessage className="text-xs" />
@@ -182,8 +195,8 @@ const BookingForm: FC<BookingFormProps> = () => {
                     <SelectValue placeholder="Select a store" />
                     {/* Loading */}
                     {isLoading && (
-                      <div className="absolute right-2 -top-8">
-                        <Loading size="6" />
+                      <div className="absolute right-2 -top-8 ">
+                        <Loading size={24} />
                       </div>
                     )}
                   </SelectTrigger>
@@ -344,8 +357,9 @@ const BookingForm: FC<BookingFormProps> = () => {
           className="border-2 hover:bg-secondary-sea hover:text-primary-sea
            border-primary-sea bg-primary-sea text-secondary-sea w-full"
           size="lg"
+          disabled={loading}
         >
-          Booking Now
+          {loading ? <Loading variant="secondary" /> : "Booking Now"}
         </Button>
       </form>
     </Form>

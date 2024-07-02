@@ -73,7 +73,7 @@ const InputService: FC<InputServiceProps> = ({ form, name, label }) => {
               <Button
                 type="button"
                 variant="outline"
-                className="mb-2 w-full text-start"
+                className="mb-2 w-full text-start bg-secondary-sea hover:text-primary-sea border-primary-sea"
                 onClick={() => setHide((prev) => !prev)}
               >
                 <PlusIcon className="w-4 h-4 mr-2" />
@@ -85,6 +85,7 @@ const InputService: FC<InputServiceProps> = ({ form, name, label }) => {
                     <div className="w-3/4">
                       <Label htmlFor="input_service">Service name</Label>
                       <Input
+                        className="bg-secondary-sea border-primary-sea focus-visible:ring-0 focus-visible:ring-offset-0 text-primary-sea placeholder:text-primary-sea/80"
                         id="input_service"
                         value={input.service}
                         onChange={(e) =>
@@ -99,6 +100,7 @@ const InputService: FC<InputServiceProps> = ({ form, name, label }) => {
                       <Label htmlFor="input_duration">Duration</Label>
                       <Input
                         id="input_duration"
+                        className="bg-secondary-sea border-primary-sea focus-visible:ring-0 focus-visible:ring-offset-0 text-primary-sea placeholder:text-primary-sea/80"
                         value={input.duration}
                         type="number"
                         onChange={(e) =>

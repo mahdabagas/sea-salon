@@ -5,19 +5,17 @@ import Image from "next/image";
 import useScreenSize from "@/hooks/useScreenSize";
 import TitleSection from "@/components/atoms/TitleSection";
 import { reviewType } from "@/types";
-import useSWR from "swr";
-import { fetcher } from "@/lib/utils";
 import Loading from "@/components/atoms/Loading";
 import PaginationSection from "../PaginationSection";
 import DialogAddReview from "../DialogAddReview";
 import { useSession } from "next-auth/react";
+import { Star } from "lucide-react";
+import useReviews from "@/hooks/useReviews";
 
 const Review = () => {
   const { data: session } = useSession();
-  const { data, isLoading } = useSWR<reviewType[], Error>(
-    "/api/review",
-    fetcher
-  );
+
+  const { data, isLoading } = useReviews();
 
   const screenSize = useScreenSize();
 
@@ -30,13 +28,37 @@ const Review = () => {
 
   useEffect(() => {
     if (screenSize.width > 0 && screenSize.width < 640) {
+      setCurrentPage(1);
       setPostsPerPage(1);
     } else if (screenSize.width > 640 && screenSize.width < 840) {
+      setCurrentPage(1);
       setPostsPerPage(2);
     } else {
+      setCurrentPage(1);
       setPostsPerPage(3);
     }
   }, [screenSize.width]);
+
+  const _renderStarRating = (rating: number = 0) => {
+    let num = [];
+
+    for (let i = 0; i < rating; i++) {
+      num.push(i);
+    }
+
+    return (
+      <div className="flex gap-2">
+        {num.map((star) => (
+          <Star
+            key={star}
+            fill="#028090"
+            size={16}
+            className="stroke-primary-sea stroke-1"
+          />
+        ))}
+      </div>
+    );
+  };
 
   return (
     <section className="w-full bg-secondary-sea px-6 md:px-12 lg:px-20 pt-12 relative">
@@ -47,7 +69,7 @@ const Review = () => {
         </div>
       )}
       {isLoading ? (
-        <Loading />
+        <Loading size={46} />
       ) : (
         <>
           <div className="flex justify-center items-start gap-8 my-4">
@@ -57,15 +79,17 @@ const Review = () => {
                 className="text-primary-sea border w-80 border-primary-sea p-6 space-y-2"
               >
                 <Image
-                  alt={data.image}
-                  src={data.image}
+                  alt={data.image || ""}
+                  src={data.image || ""}
                   width={1200}
                   height={1200}
                   className="object-cover w-full h-full"
                 />
                 <h1>{data.name}</h1>
-                <div>{data.rating}</div>
-                <p className="line-clamp-3">{data.review}</p>
+                {_renderStarRating(data.rating)}
+                <p className="line-clamp-1 text-ellipsis break-words">
+                  {data.review}
+                </p>
               </div>
             ))}
           </div>

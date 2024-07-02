@@ -34,7 +34,7 @@ export const storeFormSchema = z.object({
 
 export const reviewFormSchema = z.object({
   name: z.string({ required_error: "Name is required" }),
-  rating: z.string({ required_error: "Rating is required" }),
+  rating: z.number({ required_error: "Rating is required" }),
   review: z.string({ required_error: "Review is required" }),
   image: z.any({ required_error: "Image is required" }),
 });
@@ -53,8 +53,11 @@ export const reviewUserFormSchema = z.object({
 export const signInFormSchema = z.object({
   email: z
     .string({ required_error: "Email is required" })
-    .email({ message: "Email is not valid" }),
-  password: z.string({ required_error: "Password is required" }),
+    .email({ message: "Email is not valid" })
+    .refine((val) => val.length > 0, { message: "Email is required" }),
+  password: z
+    .string({ required_error: "Password is required" })
+    .refine((val) => val.length > 0, { message: "Password is required" }),
 });
 
 export const signUpFormSchema = z.object({

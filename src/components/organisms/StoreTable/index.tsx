@@ -24,7 +24,7 @@ const StoreTable: FC<StoreTableProps> = () => {
   );
 
   if (isLoading) {
-    return <Loading />;
+    return <Loading size={46} />;
   }
 
   return (
@@ -35,7 +35,6 @@ const StoreTable: FC<StoreTableProps> = () => {
             {BRANCH_STORE_COLUMN.map((item: string, i: number) => (
               <TableHead key={item + i}>{item}</TableHead>
             ))}
-            {/* <TableHead>Action</TableHead> */}
           </TableRow>
         </TableHeader>
         <TableBody>

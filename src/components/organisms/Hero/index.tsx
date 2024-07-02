@@ -1,27 +1,29 @@
+"use client";
+
 import Image from "next/image";
 import React, { FC } from "react";
-import { Lavishly_Yours } from "next/font/google";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import TitleSection from "@/components/atoms/TitleSection";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
-const lavishly = Lavishly_Yours({
-  subsets: ["latin"],
-  weight: "400",
-});
+interface HeroProps {
+  executeScroll: any;
+}
 
-interface HeroProps {}
+const Hero: FC<HeroProps> = ({ executeScroll }) => {
+  const router = useRouter();
+  const { data: session } = useSession();
 
-const Hero: FC<HeroProps> = () => {
   return (
     <section className="bg-secondary-sea">
       <div className="flex px-6 md:px-12 lg:px-20 items-center justify-center md:h-screen overflow-hidden">
         <div className="flex flex-col-reverse gap-6 md:flex-row items-center max-w-8xl">
           <div className="w-full md:w-1/2">
-            <h2
-              className={`${lavishly.className} text-4xl md:text-[2.5rem] lg:text-[4.2rem] text-center md:text-left text-primary-sea leading-tight font-medium`}
-            >
-              Beauty & Elegance Redifined
-            </h2>
+            <TitleSection
+              className={`text-4xl md:text-[2.5rem] lg:text-[4.2rem] text-center md:text-left text-primary-sea leading-tight font-medium`}
+              title="Beauty & Elegance Redifined"
+            />
             <h3 className="mt-6 md:mt-8 text-sm md:text-base lg:text-lg text-center md:text-left text-primary-sea font-light tracking-wider leading-relaxed">
               Welcome to our luxurious salon, where elegance meets excellence.
               Indulge in a transformative experience with our expert stylists
@@ -34,6 +36,9 @@ const Hero: FC<HeroProps> = () => {
                 className="border-2 hover:bg-secondary-sea hover:text-primary-sea
            border-primary-sea bg-primary-sea text-secondary-sea md:w-64"
                 size={"lg"}
+                onClick={() =>
+                  session ? executeScroll() : router.push("/signin")
+                }
               >
                 Booking Now
               </Button>

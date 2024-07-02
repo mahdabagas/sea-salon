@@ -1,4 +1,5 @@
 "use client";
+
 import { FC, useState } from "react";
 import {
   Dialog,
@@ -9,7 +10,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { PlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -26,24 +26,30 @@ import { useSession } from "next-auth/react";
 import { reviewUserFormSchema } from "@/lib/form.schem";
 import { Textarea } from "@/components/ui/textarea";
 import { reviewType } from "@/types";
-import { useRouter } from "next/navigation";
 import StarsRating from "@/components/atoms/StarsRating";
+import useReviews from "@/hooks/useReviews";
+import { useToast } from "@/components/ui/use-toast";
+import Loading from "@/components/atoms/Loading";
 
 interface DialogAddReviewProps {}
 
 const DialogAddReview: FC<DialogAddReviewProps> = ({}) => {
   const { data: session } = useSession();
-  const [open, setOpen] = useState(false);
+  const { mutate } = useReviews();
+
   const form = useForm<z.infer<typeof reviewUserFormSchema>>({
     resolver: zodResolver(reviewUserFormSchema),
   });
 
-  const router = useRouter();
+  const { toast } = useToast();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   const onSubmit = async (val: z.infer<typeof reviewUserFormSchema>) => {
+    setLoading(true);
     try {
       const body: reviewType = {
-        name: session?.user.name,
+        name: session?.user?.name,
         rating: val.rating,
         review: val.review,
       };
@@ -54,10 +60,20 @@ const DialogAddReview: FC<DialogAddReviewProps> = ({}) => {
       }).then(() => {
         form.setValue("review", "");
         form.setValue("rating", 0);
+        toast({
+          title: "Success",
+          description: "Create review success",
+        });
+        mutate();
+        setLoading(false);
         setOpen(false);
       });
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+      toast({
+        title: "Error",
+        description: "Please try again",
+      });
     }
   };
 
@@ -75,7 +91,7 @@ const DialogAddReview: FC<DialogAddReviewProps> = ({}) => {
         <DialogHeader>
           <DialogTitle>Add your Review</DialogTitle>
           <DialogDescription>
-            Fill the field to add new review
+            Fill the field to add your review
           </DialogDescription>
         </DialogHeader>
 
@@ -110,7 +126,7 @@ const DialogAddReview: FC<DialogAddReviewProps> = ({}) => {
                   <FormControl>
                     <Textarea
                       placeholder="Tell us your review about Sea Salon"
-                      className="w-full h-24 bg-secondary-sea border-primary-sea focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-primary-sea/40"
+                      className="w-full h-24 bg-secondary-sea border-primary-sea focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-primary-sea/80"
                       {...field}
                     />
                   </FormControl>
@@ -121,9 +137,10 @@ const DialogAddReview: FC<DialogAddReviewProps> = ({}) => {
 
             <Button
               type="submit"
+              disabled={loading}
               className="w-full bg-primary-sea hover:bg-primary-sea/80 text-secondary-sea "
             >
-              Save
+              {loading ? <Loading variant="secondary" /> : "Save"}
             </Button>
           </form>
         </Form>

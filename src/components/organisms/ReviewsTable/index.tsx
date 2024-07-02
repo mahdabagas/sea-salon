@@ -45,8 +45,8 @@ const ReviewsTable: FC<ReviewsTableProps> = () => {
               <TableCell>{item.rating}</TableCell>
               <TableCell className="max-w-96">{item.review}</TableCell>
               <TableCell className="max-w-48">
-                <Link href={item.image} target="_blank">
-                  {item.image.split("/public")[2]}
+                <Link href={item.image || ""} target="_blank">
+                  {item.image?.split("/public")[2]}
                 </Link>
               </TableCell>
             </TableRow>

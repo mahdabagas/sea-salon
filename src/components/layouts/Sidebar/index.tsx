@@ -1,8 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
+import { HiOutlineBuildingStorefront } from "react-icons/hi2";
+import { MdOutlineRateReview } from "react-icons/md";
+import { BiLogOut } from "react-icons/bi";
 
 interface SidebarProps {}
 
@@ -16,18 +20,18 @@ const Sidebar: FC<SidebarProps> = ({}) => {
           <div className="space-y-3">
             <Button
               variant={"ghost"}
-              className="w-full justify-start rounded-none hover:text-primary hover:bg-primary-sea/25"
+              className="w-full justify-start rounded-none hover:text-primary-sea hover:bg-primary-sea/25"
               onClick={() => router.push("/dashboard/branch-store")}
             >
-              {/* <AiOutlineHome className="mr-2 text-lg" /> */}
+              <HiOutlineBuildingStorefront className="mr-2" size={20} />
               Branch Store
             </Button>
             <Button
               variant={"ghost"}
-              className="w-full justify-start rounded-none hover:text-primary hover:bg-primary-sea/25"
+              className="w-full justify-start rounded-none hover:text-primary-sea hover:bg-primary-sea/25"
               onClick={() => router.push("/dashboard/reviews")}
             >
-              {/* <AiOutlineMessage className="mr-2 text-lg" /> */}
+              <MdOutlineRateReview size={20} className="mr-2" />
               Reviews
             </Button>
           </div>
@@ -36,19 +40,12 @@ const Sidebar: FC<SidebarProps> = ({}) => {
       <div className=" space-y-4 py-4">
         <div className="px-3 py-2">
           <h2 className="mb-2 px-4 text-lg font-semibold">Settings</h2>
-          {/* <Button
-            variant={"ghost"}
-            className="w-full justify-start rounded-none hover:text-primary"
-          >
-            <BsGear className="mr-2 text-lg" />
-            Settings
-          </Button> */}
           <Button
-            // onClick={() => signOut()}
+            onClick={() => signOut()}
             variant={"ghost"}
             className="w-full text-red-500 justify-start rounded-none hover:bg-red-200 hover:text-red-500"
           >
-            {/* <AiOutlineLogout className="mr-2 text-lg" /> */}
+            <BiLogOut size={20} className="mr-2" />
             Logout
           </Button>
         </div>
