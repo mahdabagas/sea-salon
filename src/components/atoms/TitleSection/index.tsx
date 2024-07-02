@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 const lavishly = Lavishly_Yours({
   subsets: ["latin"],
   weight: "400",
+  display: "swap",
+  adjustFontFallback: false,
 });
 
 interface TitleSectionProps {

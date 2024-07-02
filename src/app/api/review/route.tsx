@@ -25,7 +25,7 @@ export async function GET() {
         const imageName = review.image;
         const imageUrl = imageName
           ? await supabasePublicUrl(imageName, "reviews")
-          : "/images/review-1.png";
+          : "/images/icon-user.png";
 
         return { ...review, image: imageUrl };
       })

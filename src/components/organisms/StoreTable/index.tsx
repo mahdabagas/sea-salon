@@ -1,6 +1,6 @@
 "use client";
 
-import { FC } from "react";
+import { FC, useState } from "react";
 import {
   Table,
   TableBody,
@@ -9,11 +9,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { BRANCH_STORE_COLUMN, DATA_BRANCH_STORE } from "@/constants";
+import { BRANCH_STORE_COLUMN } from "@/constants";
 import { branchStoreType } from "@/types";
 import useSwr from "swr";
 import { fetcher } from "@/lib/utils";
 import Loading from "@/components/atoms/Loading";
+import PaginationSection from "../PaginationSection";
+import { Separator } from "@/components/ui/separator";
 
 interface StoreTableProps {}
 
@@ -23,25 +25,40 @@ const StoreTable: FC<StoreTableProps> = () => {
     fetcher
   );
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage, setPostsPerPage] = useState(3);
+
+  const lastPostIndex = currentPage * postsPerPage;
+  const firstPostIndex = lastPostIndex - postsPerPage;
+  const currentPosts = error
+    ? []
+    : data?.slice(firstPostIndex, lastPostIndex) || [];
+  const isEmpty = currentPosts.length === 0;
+
   if (isLoading) {
     return <Loading size={46} />;
   }
 
-  return (
-    <div className="border">
-      <Table>
+  return !isEmpty ? (
+    <>
+      <Table className="border-primary-sea/20 border-y">
         <TableHeader>
           <TableRow>
             {BRANCH_STORE_COLUMN.map((item: string, i: number) => (
-              <TableHead key={item + i}>{item}</TableHead>
+              <TableHead
+                key={item + i}
+                className="text-primary-sea font-semibold p-2"
+              >
+                {item}
+              </TableHead>
             ))}
           </TableRow>
         </TableHeader>
-        <TableBody>
-          {data?.map((item: branchStoreType, i: number) => (
+        <TableBody className="h-96">
+          {currentPosts.map((item: branchStoreType, i: number) => (
             <TableRow key={item.id || "" + i}>
-              <TableCell>{item.name}</TableCell>
-              <TableCell>
+              <TableCell className="align-top p-2 w-1/6">{item.name}</TableCell>
+              <TableCell className="align-top p-2 w-3/6">
                 <ul>
                   {item.service.map((data: string, i: number) => {
                     const service = data.split("|").at(0);
@@ -54,15 +71,30 @@ const StoreTable: FC<StoreTableProps> = () => {
                   })}
                 </ul>
               </TableCell>
-              <TableCell>
+              <TableCell className="align-top p-2 w-2/6">
                 {item.openTime} - {item.closeTime}
               </TableCell>
-              <TableCell>{item.location}</TableCell>
+              <TableCell className="align-top p-2 w-3/6">
+                {item.location}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-    </div>
+      <PaginationSection
+        totalPosts={data?.length}
+        postsPerPage={postsPerPage}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
+    </>
+  ) : (
+    <>
+      <Separator className="my-8 bg-primary-sea" />
+      <p className="text-center text-lg text-primary-sea">
+        Data Store is Empty
+      </p>
+    </>
   );
 };
 

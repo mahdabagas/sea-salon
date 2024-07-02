@@ -31,7 +31,10 @@ const BookingTable: FC<BookingTableProps> = () => {
 
   const lastPostIndex = currentPage * postsPerPage;
   const firstPostIndex = lastPostIndex - postsPerPage;
-  const currentPosts = data?.slice(firstPostIndex, lastPostIndex) || [];
+  const currentPosts = error
+    ? []
+    : data?.slice(firstPostIndex, lastPostIndex) || [];
+  const isEmpty = currentPosts.length === 0;
 
   if (isLoading) {
     return (
@@ -42,77 +45,88 @@ const BookingTable: FC<BookingTableProps> = () => {
   }
   return (
     <>
-      <Table className="border-primary-sea/20 mb-4 w-full mx-auto text-primary-sea border-y mt-8 ">
-        <TableHeader>
-          <TableRow>
-            {BOOKING_COLUMN.map((item: string, i: number) => (
-              <TableHead
-                key={item + i}
-                className="text-primary-sea font-semibold p-2"
-              >
-                {item}
-              </TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody className="h-96">
-          {currentPosts?.map((item: bookingListType, i: number) => (
-            <TableRow key={item.id || "" + i}>
-              <TableCell className="w-2/12 align-top p-2">
-                {item.name}
-              </TableCell>
-              <TableCell className="w-1/12 align-top p-2">
-                {item.phone}
-              </TableCell>
-              <TableCell className="w-2/12 align-top p-2">
-                {dayjs(item.date).format("dddd HH:mm, DD MMM YYYY")}
-              </TableCell>
-              <TableCell className="w-3/12 align-top p-2">
-                <ul>
-                  {item.services.map((data: string, i: number) => {
-                    const service = data.split("|").at(0);
-                    const duration = data.split("|").pop();
-                    return (
-                      <li key={data + i}>
-                        -{service}, {duration} hour{" "}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </TableCell>
-              <TableCell className="w-5/12 align-top p-2">
-                <div
-                  className="grid"
-                  style={{ gridTemplateColumns: "8rem 1fr" }}
-                >
-                  <p>Name Store</p>
-                  <p>: {item.nameStore}</p>
-                </div>
-                <div
-                  className="grid"
-                  style={{ gridTemplateColumns: "8rem 1fr" }}
-                >
-                  <p>Time Store</p>
-                  <p>: {item.timeStore}</p>
-                </div>
-                <div
-                  className="grid"
-                  style={{ gridTemplateColumns: "8rem 1fr" }}
-                >
-                  <p>Location Store</p>
-                  <p>: {item.locationStore}</p>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <PaginationSection
-        totalPosts={data?.length}
-        postsPerPage={postsPerPage}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-      />
+      {!isEmpty ? (
+        <>
+          <Table className="border-primary-sea/20 mb-4 w-full mx-auto text-primary-sea border-y mt-8 ">
+            <TableHeader>
+              <TableRow>
+                {BOOKING_COLUMN.map((item: string, i: number) => (
+                  <TableHead
+                    key={item + i}
+                    className="text-primary-sea font-semibold p-2"
+                  >
+                    {item}
+                  </TableHead>
+                ))}
+              </TableRow>
+            </TableHeader>
+            <TableBody className="h-96">
+              {currentPosts?.map((item: bookingListType, i: number) => (
+                <TableRow key={item.id || "" + i}>
+                  <TableCell className="w-2/12 align-top p-2">
+                    {item.name}
+                  </TableCell>
+                  <TableCell className="w-1/12 align-top p-2">
+                    {item.phone}
+                  </TableCell>
+                  <TableCell className="w-2/12 align-top p-2">
+                    {dayjs(item.date).format("dddd HH:mm, DD MMM YYYY")}
+                  </TableCell>
+                  <TableCell className="w-3/12 align-top p-2">
+                    <ul>
+                      {item.services.map((data: string, i: number) => {
+                        const service = data.split("|").at(0);
+                        const duration = data.split("|").pop();
+                        return (
+                          <li key={data + i}>
+                            -{service}, {duration} hour{" "}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </TableCell>
+                  <TableCell className="w-5/12 align-top p-2">
+                    <div
+                      className="grid"
+                      style={{ gridTemplateColumns: "8rem 1fr" }}
+                    >
+                      <p>Name Store</p>
+                      <p>: {item.nameStore}</p>
+                    </div>
+                    <div
+                      className="grid"
+                      style={{ gridTemplateColumns: "8rem 1fr" }}
+                    >
+                      <p>Time Store</p>
+                      <p>: {item.timeStore}</p>
+                    </div>
+                    <div
+                      className="grid"
+                      style={{ gridTemplateColumns: "8rem 1fr" }}
+                    >
+                      <p>Location Store</p>
+                      <p>: {item.locationStore}</p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <PaginationSection
+            totalPosts={data?.length || 0}
+            postsPerPage={postsPerPage}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+          />
+        </>
+      ) : (
+        <>
+          <Separator className="my-8 bg-primary-sea" />
+          <p className="text-center text-lg text-primary-sea">
+            You haven`t booked yet
+          </p>
+        </>
+      )}
     </>
   );
 };

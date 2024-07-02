@@ -15,8 +15,7 @@ import useReviews from "@/hooks/useReviews";
 const Review = () => {
   const { data: session } = useSession();
 
-  const { data, isLoading } = useReviews();
-
+  const { data, isLoading, error } = useReviews();
   const screenSize = useScreenSize();
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -24,7 +23,10 @@ const Review = () => {
 
   const lastPostIndex = currentPage * postsPerPage;
   const firstPostIndex = lastPostIndex - postsPerPage;
-  const currentPosts = data?.slice(firstPostIndex, lastPostIndex) || [];
+  const currentPosts = error
+    ? []
+    : data?.slice(firstPostIndex, lastPostIndex) || [];
+  const isEmpty = currentPosts.length === 0;
 
   useEffect(() => {
     if (screenSize.width > 0 && screenSize.width < 640) {
@@ -68,12 +70,14 @@ const Review = () => {
           <DialogAddReview />
         </div>
       )}
-      {isLoading ? (
-        <Loading size={46} />
-      ) : (
+      {isLoading && <Loading size={46} />}
+      {!isLoading && isEmpty && (
+        <p className="text-center text-primary-sea text-lg">Belum Ada Review</p>
+      )}
+      {!isLoading && !isEmpty && (
         <>
           <div className="flex justify-center items-start gap-8 my-4">
-            {currentPosts.map((data: reviewType, i: number) => (
+            {currentPosts?.map((data: reviewType, i: number) => (
               <div
                 key={data.id || "" + i}
                 className="text-primary-sea border w-80 border-primary-sea p-6 space-y-2"

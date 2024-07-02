@@ -1,7 +1,12 @@
 import { Lavishly_Yours } from "next/font/google";
 import { FC } from "react";
 
-const lavishly = Lavishly_Yours({ subsets: ["latin"], weight: "400" });
+const lavishly = Lavishly_Yours({
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+  adjustFontFallback: false,
+});
 
 interface LogoTextSeaProps {
   className?: string;
