@@ -11,9 +11,8 @@ npx prisma generate
 npm run dev
 ```
 4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-   
-to Open database with prisma you can run
+5. to Open database with prisma you can run
 ```bash
 npx prisma studio
 ```
-Open link already deploy [https://sea-salon-liart.vercel.app/](https://sea-salon-liart.vercel.app/)
+6. Open link already deploy [https://sea-salon-liart.vercel.app/](https://sea-salon-liart.vercel.app/)
