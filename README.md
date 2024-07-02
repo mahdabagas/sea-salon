@@ -19,3 +19,5 @@ to Open database with prisma can run
 ```bash
 npx prisma studio
 ```
+
+Open link already deploy [https://sea-salon-liart.vercel.app/](https://sea-salon-liart.vercel.app/)
